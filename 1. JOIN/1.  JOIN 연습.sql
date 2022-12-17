@@ -53,6 +53,3 @@ WHERE A.DEPT_CODE = 'D6';
 
 
 
-
-
-
