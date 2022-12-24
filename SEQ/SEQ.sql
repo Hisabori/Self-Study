@@ -1,0 +1,17 @@
+CREATE SEQUENCE SEQ_USER_ID
+INCREMENT BY 1
+START WITH 1
+MINVALUE 1
+MAXVALUE 999999999
+
+--NOCYCLE: 최대값 도달 시 생성 중단
+--CYCLE: 처음부터 다시 생성
+NOCYCLE
+
+--CACNE: 시퀸스 값 미리 할당
+--NOCACNE: 미리 할당하지 않음
+NOCACHE;
+
+--시퀸스 조회하기
+--조회 할 떄마다 값이 (NEXTVAL) 1 씩 늘어난다.
+SELECT SEQ_USER_ID.NEXTVAL FROM DUAL;
