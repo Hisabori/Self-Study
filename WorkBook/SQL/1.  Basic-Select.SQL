@@ -3,6 +3,7 @@ SELECT DEPARTMENT_NAME AS "학과이름",
 FROM TB_DEPARTMENT;
 
 
+
 SELECT DEPARTMENT_NAME || ' 의 정원은 ' || CAPACITY || ' 명 입니다' AS "학과별 정원"
 FROM TB_DEPARTMENT;
 
@@ -13,6 +14,59 @@ FROM TB_DEPARTMENT D JOIN TB_STUDENT S ON
     D.DEPARTMENT_NO = S.DEPARTMENT_NO
 WHERE STUDENT_NAME = '한수현';
 
+
+--22.12.25
+SELECT STUDENT_NAME
+FROM TB_STUDENT WHERE DEPARTMENT_NO = 001 -- 국어국문학과 출력
+                  AND ABSENCE_YN = 'Y' -- 휴햑 여부 Y만 출력
+                  AND STUDENT_SSN LIKE '_______2%'; -- 주민번호가 2인 (=여성) 만 출력
+
+
 SELECT *
 FROM TB_DEPARTMENT D JOIN TB_STUDENT S ON
-    D.DEPARTMENT_NO = S.DEPARTMENT_NO
+    D.DEPARTMENT_NO = S.DEPARTMENT_NO;
+
+--도서관리 예제
+SELECT STUDENT_NAME AS "도서 장기 미반납 LIST"
+FROM TB_STUDENT
+
+-- STUDENT 우측에 IN을 입력헤 STUDENT_NO 중복출력
+WHERE STUDENT_NO IN  ('A513079', 'A513090', 'A513091', 'A513110', 'A513119');
+
+
+--입학정원 20명 - 30명인 학과정보 출력 (학과 이름, 계열)
+--필요 열: DEPARTMENT_NAME + CATEGORY
+--필요 테이블: TB_DEPARTMENT
+SELECT DEPARTMENT_NAME, CATEGORY, -- 정보 조회
+       CAPACITY AS "참고: 인원수" -- 쿼리 돌릴 때 조건으로 사용할 정원수
+FROM TB_DEPARTMENT -- 해당 정보가 있는 테이블
+WHERE CAPACITY >20 AND CAPACITY < 30; --  CAPACITY(정원) 이 20~30명인 학과정보만 조회하도록 WHERE절로 조건 세팅
+
+
+-- 교수찾기 (총장찾는법= DEPARTMENT_NO 가 NULL값이면 총장)
+SELECT PROFESSOR_NAME -- 교수 이름 조회
+FROM TB_PROFESSOR -- 교수정보 테이블
+WHERE DEPARTMENT_NO IS NULL; --교수들 중 소속 학과가 존재하지 않는 교수 (=총장) 조회
+--DEPARTMENT_NO 가 NULL값인 사람 찾기 (IS NULL 이용)
+
+
+--학생 중 학과 정보가 없는 학생 조회
+--TB_STUDENT 테이블에서 FK 값 (DEPARTMENT_NO) 가 NULL값인 학생을 찾으면 된다.
+--지금은 NULL값이 없어 조회가 되지 않는다.
+--정상 작동 확인방법: NULL을 NOT NULL로 변경 후 돌려보자.
+SELECT DEPARTMENT_NO
+FROM TB_STUDENT WHERE DEPARTMENT_NO IS NULL;
+
+--정상 작동 확인용 코드 (NULL -> NOT NULL)
+SELECT DEPARTMENT_NO
+FROM TB_STUDENT WHERE DEPARTMENT_NO IS NOT NULL; --작동함
+
+--22.12.25 10:45
+
+
+-- 수강신청 산수과목 확인하기
+-- TB_CLASSS 에서 CLASS_NAME (강의명)과 CLASS_NO(과목번호)를 조회한다.
+-- 이후, CLASS_NO 중 선수과목만 조회되도록 PREATTENDING_CLASS_NO에 대해 IS NOT NULL 처리한다.
+SELECT CLASS_NAME AS "강의명", CLASS_NO AS "선수과목"
+FROM TB_CLASS
+WHERE PREATTENDING_CLASS_NO IS NOT NULL;
